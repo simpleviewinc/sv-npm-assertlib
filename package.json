@@ -1,14 +1,16 @@
 {
 	"name" : "@simpleview/assertlib",
-	"version" : "1.0.0",
+	"version" : "1.0.1",
 	"description" : "Assertion helper",
 	"author" : "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies" : {
-		"jsvalidator" : "1.2.0",
 		"mocha" : "5.2.0",
-		"cheerio" : "0.22.0",
 		"webpack" : "4.28.1",
 		"webpack-cli" : "3.2.1"
+	},
+	"dependencies" : {
+		"cheerio" : "0.22.0",
+		"jsvalidator" : "1.2.0"
 	},
 	"main" : "src/index.js",
 	"scripts" : {

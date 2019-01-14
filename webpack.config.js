@@ -7,6 +7,7 @@ module.exports = {
 		libraryTarget : "umd"
 	},
 	externals : {
-		cheerio : "cheerio"
+		cheerio : "cheerio",
+		jsvalidator : "jsvalidator"
 	}
 }
