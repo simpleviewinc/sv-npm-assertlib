@@ -1,27 +1,27 @@
 {
-	"name" : "@simpleview/assertlib",
-	"version" : "1.0.1",
-	"description" : "Assertion helper",
-	"author" : "Owen Allen <owenallenaz@gmail.com>",
-	"devDependencies" : {
-		"mocha" : "5.2.0",
-		"webpack" : "4.28.1",
-		"webpack-cli" : "3.2.1"
+	"name": "@simpleview/assertlib",
+	"version": "1.1.0",
+	"description": "Assertion helper",
+	"author": "Owen Allen <owenallenaz@gmail.com>",
+	"devDependencies": {
+		"mocha": "5.2.0",
+		"webpack": "4.28.1",
+		"webpack-cli": "3.2.1"
 	},
-	"dependencies" : {
-		"cheerio" : "0.22.0",
-		"jsvalidator" : "1.2.0"
+	"dependencies": {
+		"cheerio": "0.22.0",
+		"jsvalidator": "1.2.0"
 	},
-	"main" : "src/index.js",
-	"scripts" : {
-		"test" : "./node_modules/.bin/mocha $(find testing/ -name *.test.js) -R spec --colors --check-leaks",
-		"build" : "webpack --config webpack.config.js",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "./node_modules/.bin/mocha $(find testing/ -name *.test.js) -R spec --colors --check-leaks",
+		"build": "webpack --config webpack.config.js",
 		"docker": "./dev/build && ./dev/run || true",
 		"publish": "./dev/publish"
 	},
-	"repository" : {
-		"type" : "git",
-		"url" : "https://github.com/simpleviewinc/sv-npm-assertlib"
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/simpleviewinc/sv-npm-assertlib"
 	},
-	"license" : "MIT"
+	"license": "MIT"
 }
