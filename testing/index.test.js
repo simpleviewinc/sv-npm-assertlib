@@ -709,11 +709,94 @@ describe(__filename, function() {
 				],
 				message : `attrs mismatch for selector 'div' attr 'data-foo'. '{ "foo" : [{ "complex" : true }, { "magic" : "yes" }] }' did not contain '/bogus/'`,
 				valid : false
+			},
+			{
+				name : "should allow exec on nodes, valid",
+				html : `<ul><li>One</li><li>Two</li><li>Three</li></ul>`,
+				checks : [
+					{
+						selector : "ul",
+						exec : ({ $, node }) => {
+							node.find("li").eq(0).attr("added", true);
+						}
+					},
+					// this block ensures that our exec was called by checking the altered state of the dom
+					{
+						selector : "li",
+						eq : 0,
+						attrs : {
+							added : "true"
+						}
+					}
+				],
+				valid : true
+			},
+			{
+				name : "should allow exec on nodes, invalid",
+				html : `<ul><li>One</li><li>Two</li><li>Three</li></ul>`,
+				checks : [
+					{
+						selector : "ul",
+						exec : ({ $, node }) => {
+							throw new Error("Failure in exec");
+						}
+					}
+				],
+				message : "Failure in exec",
+				valid : false
+			},
+			{
+				name : "should allow each on nodes, valid",
+				html : `<ul><li>One</li><li>Two</li><li>Three</li></ul>`,
+				checks : [
+					{
+						selector : "li",
+						each : ({ $, node, i }) => {
+							node.attr("i", i);
+						}
+					},
+					{
+						selector : "li",
+						eq : 0,
+						attrs : {
+							i : "0"
+						}
+					},
+					{
+						selector : "li",
+						eq : 1,
+						attrs : {
+							i : "1"
+						}
+					},
+					{
+						selector : "li",
+						eq : 2,
+						attrs : {
+							i : "2"
+						}
+					}
+				],
+				valid : true
+			},
+			{
+				name : "should allow each on nodes, valid",
+				html : `<ul><li>One</li><li>Two</li><li>Three</li></ul>`,
+				checks : [
+					{
+						selector : "li",
+						each : ({ $, node, i }) => {
+							throw new Error("Each fail");
+						}
+					}
+				],
+				message : "Each fail",
+				valid : false
 			}
 		]
 		
 		tests.forEach(function(test) {
-			it(test.name, function(done) {
+			(test.only ? it.only : it)(test.name, function(done) {
 				try {
 					assertLib.assertHtml(test.html, test.checks);
 				} catch(e) {

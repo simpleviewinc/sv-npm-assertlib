@@ -210,7 +210,9 @@ var _assertHtml_checkNode = function(parentNode, args) {
 			{ name : "eq", type : "number" },
 			{ name : "attrs", type : "indexObject" },
 			{ name : "css", type : "indexObject" },
-			{ name : "checks", type : "object" }
+			{ name : "checks", type : "object" },
+			{ name : "exec", type : "function" },
+			{ name : "each", type : "function" }
 		],
 		allowExtraKeys : false,
 		throwOnInvalid : true
@@ -264,6 +266,16 @@ var _assertHtml_checkNode = function(parentNode, args) {
 			var cssValue = node.css(i);
 			assert.strictEqual(cssValue, val, `css mismatch for selector '${args.selector}' css '${i}'. '${cssValue}' !== '${val}'`);
 		}
+	}
+	
+	if (args.exec !== undefined) {
+		args.exec({ $ : cheerio, node : node });
+	}
+	
+	if (args.each !== undefined) {
+		node.each(function(i, val) {
+			args.each({ $ : cheerio, node : cheerio(val), i : i });
+		});
 	}
 	
 	if (args.checks !== undefined) {
