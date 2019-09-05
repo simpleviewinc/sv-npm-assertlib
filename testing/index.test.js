@@ -143,6 +143,36 @@ describe(__filename, function() {
 				message : "data at root.foo was not instanceof the proper class"
 			},
 			{
+				it : "object with allowExtraKeys option",
+				data : { foo : "fooValue", bar : "bogus" },
+				schema : { foo : "fooValue" },
+				options : { allowExtraKeys : false },
+				valid : false,
+				message : "extra key 'bar' at root"
+			},
+			{
+				it : "object with nested extra key",
+				data : { foo : "fooValue", bar : { valid : true, extra : true } },
+				schema : { foo : "fooValue", bar : { valid : true } },
+				options : { allowExtraKeys : false },
+				valid : false,
+				message : "extra key 'extra' at root.bar"
+			},
+			{
+				it : "object with allowExtraKeys overwrite option",
+				data : { foo : "fooValue", extra : true },
+				schema : { type : "object", data : { foo : "fooValue" }, allowExtraKeys : true },
+				options : { allowExtraKeys : false },
+				valid : true
+			},
+			{
+				it : "object with _deepCheck_allowExtraKeys overwrite option",
+				data : { foo : "fooValue", extra : true },
+				schema : { foo : "fooValue", _deepCheck_allowExtraKeys : true },
+				options : { allowExtraKeys : false },
+				valid : true
+			},
+			{
 				it : "object with no data",
 				data : { foo : new Date() },
 				schema : { foo : { type : "object", class : Date } },
@@ -350,7 +380,7 @@ describe(__filename, function() {
 		tests.forEach(function(test) {
 			(test.only ? it.only : it )(test.it, function() {
 				try {
-					assertLib.deepCheck(test.data, test.schema);
+					assertLib.deepCheck(test.data, test.schema, test.options);
 				} catch(e) {
 					assert.strictEqual(e.message, test.message);
 					return;

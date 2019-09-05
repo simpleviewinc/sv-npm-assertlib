@@ -43,12 +43,13 @@ var trimErr = function(err, str) {
 // check a deeply nested object based on specific rules
 // this is a more robust version of deepStrictEqual enforcing not only equality of valid, but also type of data for cases when strict equality doesn't work
 // such as when deeling with rich Objects and types like Date, mongolayer.Document, and functions (and their returns)
-var deepCheck = function(data, schema) {
-	_deepCheck(data, schema, ["root"]);
+var deepCheck = function(data, schema, options) {
+	options = options || {};
+	_deepCheck(data, schema, ["root"], undefined, options);
 }
 
 // recursive call used by _deepCheck
-var _deepCheck = function(data, schema, chain, prevContext) {
+var _deepCheck = function(data, schema, chain, prevContext, options) {
 	var schemaType = typeof schema;
 	var simpleKeys = ["boolean", "number", "undefined"];
 	var schemaKeys = ["type", "data", "class", "calls", "allowExtraKeys"];
@@ -67,9 +68,20 @@ var _deepCheck = function(data, schema, chain, prevContext) {
 	
 	var schemaItem = isShorthand ? { type : isFunction ? "function" : isDate ? "date" : isObject ? "object" : isArray ? "array" : isNull ? "null" : schemaType, data : schema } : schema;
 	
-	// if the schema object includes _deepCheck_allowExtraKeys we valid the current object with that assumption in place, prevents unneeded nesting
+	// determine allowExtraKeys state
+	var allowExtraKeys;
 	if (isShorthand && isObject && schemaItem.data._deepCheck_allowExtraKeys !== undefined) {
-		schemaItem.allowExtraKeys = schemaItem.data._deepCheck_allowExtraKeys;
+		// if the schema object includes _deepCheck_allowExtraKeys we valid the current object with that assumption in place, prevents unneeded nesting
+		allowExtraKeys = schemaItem.data._deepCheck_allowExtraKeys;
+	} else if (schemaItem.allowExtraKeys !== undefined) {
+		// if the schemaItem has an allowExtraKeys, we use that
+		allowExtraKeys = schemaItem.allowExtraKeys;
+	} else if (options.allowExtraKeys !== undefined) {
+		// if neither then we utilize what is passed in options
+		allowExtraKeys = options.allowExtraKeys;
+	} else {
+		// if none of the above, we default to true
+		allowExtraKeys = true;
 	}
 	
 	// ensure that the derived schemaItem matches expected validation keys
@@ -123,7 +135,7 @@ var _deepCheck = function(data, schema, chain, prevContext) {
 			assert.strictEqual(data instanceof schemaItem.class, true, "data at " + chain.join(".") + " was not instanceof the proper class");
 		}
 		
-		if (schemaItem.allowExtraKeys === false) {
+		if (allowExtraKeys === false) {
 			var leftKeys = Object.keys(data);
 			var rightKeys = Object.keys(schemaItem.data);
 			
@@ -137,7 +149,7 @@ var _deepCheck = function(data, schema, chain, prevContext) {
 				var newChain = chain.slice(0);
 				newChain.push(key);
 				
-				_deepCheck(data[key], schemaItem.data[key], newChain, data);
+				_deepCheck(data[key], schemaItem.data[key], newChain, data, options);
 			});
 		}
 	} else if (schemaItem.type === "array") {
@@ -149,7 +161,7 @@ var _deepCheck = function(data, schema, chain, prevContext) {
 				var newChain = chain.slice(0);
 				newChain.push(i);
 				
-				_deepCheck(data[i], schemaItem.data[i], newChain);
+				_deepCheck(data[i], schemaItem.data[i], newChain, data, options);
 			});
 		}
 	} else if (schemaItem.type === "date") {
