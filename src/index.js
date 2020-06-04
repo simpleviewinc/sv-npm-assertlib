@@ -45,7 +45,17 @@ var trimErr = function(err, str) {
 // such as when deeling with rich Objects and types like Date, mongolayer.Document, and functions (and their returns)
 var deepCheck = function(data, schema, options) {
 	options = options || {};
-	_deepCheck(data, schema, ["root"], undefined, options);
+	try {
+		_deepCheck(data, schema, ["root"], undefined, options);
+	} catch(e) {
+		try {
+			console.log("deepCheck data:", JSON.stringify(data));
+		} catch(e) {
+			// if we're unable to stringify the result, we fail silently
+		}
+
+		throw e;
+	}
 }
 
 // recursive call used by _deepCheck

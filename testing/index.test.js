@@ -374,6 +374,21 @@ describe(__filename, function() {
 					}
 				},
 				valid : true
+			},
+			{
+				it : "should not fail on circular failure",
+				data : (() => {
+					const foo = {};
+					foo.bar = "barValue";
+					foo.foo = foo;
+
+					return foo;
+				})(),
+				schema : {
+					bar : "bogus"
+				},
+				valid : false,
+				message : "data 'barValue' did not equal 'bogus' at root.bar"
 			}
 		]
 		
