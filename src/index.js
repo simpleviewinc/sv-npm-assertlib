@@ -144,15 +144,15 @@ var _deepCheck = function(data, schema, chain, prevContext, options) {
 		if (schemaItem.class !== undefined) {
 			assert.strictEqual(data instanceof schemaItem.class, true, "data at " + chain.join(".") + " was not instanceof the proper class");
 		}
-		
-		if (allowExtraKeys === false) {
-			var leftKeys = Object.keys(data);
-			var rightKeys = Object.keys(schemaItem.data);
-			
-			leftKeys.forEach(val => assert.strictEqual(rightKeys.indexOf(val) > -1, true, "extra key '" + val + "' at " + chain.join(".")));
-		}
-		
+
 		if (schemaItem.data !== undefined) {
+			if (allowExtraKeys === false) {
+				var leftKeys = Object.keys(data);
+				var rightKeys = Object.keys(schemaItem.data);
+				
+				leftKeys.forEach(val => assert.strictEqual(rightKeys.indexOf(val) > -1, true, "extra key '" + val + "' at " + chain.join(".")));
+			}
+
 			Object.keys(schemaItem.data).forEach(function(key, i) {
 				if (key === "_deepCheck_allowExtraKeys") { return; }
 				

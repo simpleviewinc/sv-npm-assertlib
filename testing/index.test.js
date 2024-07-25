@@ -71,6 +71,13 @@ describe(__filename, function() {
 			{ it : "object valid more keys", data : { foo : "fooValue", bar : "barValue" }, schema : { type : "object", data : { foo : "fooValue" } }, valid : true },
 			{ it : "object invalid more keys", data : { foo : "fooValue" }, schema : { type : "object", data : { foo : "fooValue", bar : "barValue" } }, valid : false, message : "data at root.bar was not a string, but it should be" },
 			{
+				it: "object valid no data allowExtraKeys false",
+				data: { foo: { bar: { baz: "bazValue" } } },
+				schema: { foo: { type: "object" } },
+				options: { allowExtraKeys: false },
+				valid: true
+			},
+			{
 				it : "object recurse valid",
 				data : { foo : { bar : { baz : "bazValue" } } },
 				schema : { type : "object", data : { foo : { type : "object", data : { bar : { type : "object", data : { baz : "bazValue" } } } } } },
