@@ -5,7 +5,7 @@
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
 		"mocha": "5.2.0",
-		"webpack": "4.28.1",
+		"webpack": "5.94.0",
 		"webpack-cli": "3.2.1"
 	},
 	"dependencies": {
