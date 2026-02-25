@@ -150,6 +150,29 @@ describe(__filename, function() {
 				message : "data at root.foo was not instanceof the proper class"
 			},
 			{
+				it : "object required valid",
+				data : {},
+				schema : {
+					foo : {
+						type: "boolean",
+						required : false
+					}
+				},
+				valid : true
+			},
+			{
+				it : "object required invalid",
+				data : {},
+				schema : {
+					foo : {
+						type: "boolean",
+						required : ""
+					}
+				},
+				valid : false,
+				message: "Validation Error\r\n\tField \'required\' should be type \'boolean\' but is type \'string\'. Value is \"\"."
+			},
+			{
 				it : "object with allowExtraKeys option",
 				data : { foo : "fooValue", bar : "bogus" },
 				schema : { foo : "fooValue" },

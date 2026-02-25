@@ -62,7 +62,7 @@ var deepCheck = function(data, schema, options) {
 var _deepCheck = function(data, schema, chain, prevContext, options) {
 	var schemaType = typeof schema;
 	var simpleKeys = ["boolean", "number", "undefined"];
-	var schemaKeys = ["type", "data", "class", "calls", "allowExtraKeys"];
+	var schemaKeys = ["type", "data", "class", "calls", "allowExtraKeys", "required"];
 	
 	var isDate = schema instanceof Date;
 	var isArray = schema instanceof Array;
@@ -101,6 +101,7 @@ var _deepCheck = function(data, schema, chain, prevContext, options) {
 			{ name : "type", type : "string", enum : ["boolean", "string", "array", "number", "undefined", "function", "object", "date", "null"], required : true },
 			{ name : "data", type : "any" },
 			{ name : "class", type : "function" },
+			{ name : "required", type : "boolean" },
 			{
 				name : "calls",
 				type : "array",
@@ -118,6 +119,10 @@ var _deepCheck = function(data, schema, chain, prevContext, options) {
 		throwOnInvalid : true,
 		allowExtraKeys : false
 	});
+	
+	if (schemaItem.required === false && data === undefined) {
+		return;
+	}
 	
 	if (simpleKeys.indexOf(schemaItem.type) > -1) {
 		assert.strictEqual(typeof data, schemaItem.type, "data at " + chain.join(".") + " was not a " + schemaItem.type + ", but it should be");

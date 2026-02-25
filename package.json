@@ -1,6 +1,6 @@
 {
 	"name": "@simpleview/assertlib",
-	"version": "1.2.1",
+	"version": "1.2.3",
 	"description": "Assertion helper",
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
